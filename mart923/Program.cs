@@ -22,30 +22,44 @@ namespace mart923
         }
         public static void Main(String[] args)
         {
-
+            int k;
             try
             {
-                var input = File.ReadAllText(args[0]);
-                var a = (File.ReadAllText(args[1]));
-                Console.WriteLine(a);
-                int k = 5;                      // specifies number of lines for output
-                foreach (char i in input)
-                {
-                    Console.Write(i);
-                }
+                string[] arguments = Environment.GetCommandLineArgs();
+                var input = File.ReadAllText(arguments[1]);
                 Console.WriteLine("Frequency:");
                 Regex rgx = new Regex("[^A-Za-z]");
                 var text = rgx.Replace(input, " ");
                 Regex rgx1 = new Regex("\\s+");
                 var words = rgx1.Replace(text, " ").Trim().Split(' ');
-                var frs = Frequencies(words, k);
-                //Array.ForEach(words, w => Console.WriteLine(w));
-                foreach ((int, string) f in frs)
+                try
                 {
-                    Console.WriteLine("{0} {1}", f.Item1, f.Item2);
+                    k = int.Parse(arguments[2]);
+                    var frs = Frequencies(words, k);
+                    //Array.ForEach(words, w => Console.WriteLine(w));
+                    foreach ((int, string) f in frs)
+                    {
+                        Console.WriteLine("{0} {1}", f.Item1, f.Item2);
+                    }
                 }
-                //Console.WriteLine(frs);
-                Console.ReadKey();
+                catch(Exception e)
+                {
+                    Console.WriteLine($"^*** Error: (ex )", e);
+                    Environment.ExitCode = 1;
+                    k = 3;
+                    var frs = Frequencies(words, k);
+                    //Array.ForEach(words, w => Console.WriteLine(w));
+                    foreach ((int, string) f in frs)
+                    {
+                        Console.WriteLine("{0} {1}", f.Item1, f.Item2);
+                    }
+                }
+                finally
+                {
+                    //Console.WriteLine(frs);
+                    Console.ReadKey();
+                }
+               
             }
             catch (Exception e)
             {
